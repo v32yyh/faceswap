@@ -6,106 +6,123 @@
   <style>
     body {
       font-family: Arial, sans-serif;
-      background: url('sparky-bg.jpg') no-repeat center center fixed;
-      background-size: cover;
-      color: #fff;
+      background: #0d0d0d; /* solid dark background */
       display: flex;
       justify-content: center;
       align-items: center;
       height: 100vh;
       margin: 0;
+      color: white;
     }
-
     .card {
-      background: rgba(0, 0, 0, 0.7);
-      padding: 30px;
+      background: #1a1a1a;
+      padding: 25px;
       border-radius: 15px;
       box-shadow: 0 0 20px #00ffea;
       text-align: center;
       width: 90%;
       max-width: 500px;
     }
-
     h1 {
       color: #00ffea;
-      text-shadow: 0 0 10px #000;
-      margin-bottom: 20px;
+      margin-bottom: 10px;
     }
-
     p {
-      margin-bottom: 20px;
+      margin-bottom: 15px;
     }
-
-    input {
+    input, button {
+      margin: 8px 0;
       padding: 10px;
-      width: 90%;
-      margin: 10px 0;
       border-radius: 5px;
-      border: 1px solid #00ffea;
-      background: rgba(0, 0, 0, 0.6);
-      color: #fff;
-      outline: none;
+      border: none;
+      width: 90%;
     }
-
+    input {
+      background: #262626;
+      color: white;
+      border: 1px solid #00ffea;
+    }
     button {
-      padding: 10px 20px;
       background: #00ffea;
       color: #000;
-      border: none;
-      border-radius: 5px;
       cursor: pointer;
       font-weight: bold;
       transition: 0.3s;
     }
-
-    button:hover {
-      background: #00b8a9;
-      box-shadow: 0 0 10px #00ffea;
-    }
-
-    #result {
-      margin-top: 20px;
-    }
-
+    button:hover { background: #00b8a9; }
     img {
       margin-top: 20px;
       max-width: 100%;
       border: 2px solid #00ffea;
       border-radius: 10px;
-      box-shadow: 0 0 20px #000;
+    }
+    a.download-btn {
+      display: inline-block;
+      margin-top: 15px;
+      padding: 10px 15px;
+      background: #00ffea;
+      color: #000;
+      font-weight: bold;
+      border-radius: 5px;
+      text-decoration: none;
+      transition: 0.3s;
+    }
+    a.download-btn:hover {
+      background: #00b8a9;
+      box-shadow: 0 0 10px #00ffea;
     }
   </style>
 </head>
 <body>
   <div class="card">
-    <h1>🔄 Face Swap App</h1>
-    <p>Enter two image URLs to swap faces:</p>
-    
+    <h1>🔄 Face Swap</h1>
+    <p>Swap faces instantly between two images 😲</p>
+
     <input type="text" id="imageUrl" placeholder="Source Image URL">
-    <br>
     <input type="text" id="targetUrl" placeholder="Target Image URL">
     <br>
     <button onclick="swapFaces()">Swap Faces</button>
-    
+
     <div id="result"></div>
   </div>
 
   <script>
-    function swapFaces() {
+    async function swapFaces() {
       const img1 = document.getElementById('imageUrl').value;
       const img2 = document.getElementById('targetUrl').value;
-      
+      const resultDiv = document.getElementById('result');
+
       if (!img1 || !img2) {
         alert("Please enter both image URLs!");
         return;
       }
-      
-      const apiUrl = `https://bj-devs.serv00.net/v1/faceswap.php?imageurl=${encodeURIComponent(img1)}&targetimg=${encodeURIComponent(img2)}`;
-      
-      document.getElementById('result').innerHTML = `
-        <p>Processing... Please wait ⏳</p>
-        <img src="${apiUrl}" alt="Swapped Result">
-      `;
+
+      resultDiv.innerHTML = `<p>Processing... Please wait ⏳</p>`;
+
+      // Obfuscated API pieces
+      const part1 = "https://bj-devs";
+      const part2 = ".serv00.net";
+      const part3 = "/v1/faceswap.php";
+
+      const apiUrl = `${part1}${part2}${part3}?imageurl=${encodeURIComponent(img1)}&targetimg=${encodeURIComponent(img2)}`;
+
+      try {
+        const response = await fetch(apiUrl);
+        const data = await response.json();
+
+        if (data.status && data.result) {
+          resultDiv.innerHTML = `
+            <p>✅ Done!</p>
+            <img src="${data.result}" alt="Swapped Result">
+            <br>
+            <a href="${data.result}" download="faceswap.jpg" class="download-btn">⬇️ Download Result</a>
+          `;
+        } else {
+          resultDiv.innerHTML = `<p>❌ Face swap failed. Try again.</p>`;
+        }
+      } catch (error) {
+        resultDiv.innerHTML = `<p>⚠️ Error: ${error.message}</p>`;
+      }
     }
   </script>
 </body>
