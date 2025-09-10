@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Face Swap App</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: url('sparky-bg.jpg') no-repeat center center fixed;
+      background-size: cover;
+      color: #fff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    .card {
+      background: rgba(0, 0, 0, 0.7);
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 0 20px #00ffea;
+      text-align: center;
+      width: 90%;
+      max-width: 500px;
+    }
+
+    h1 {
+      color: #00ffea;
+      text-shadow: 0 0 10px #000;
+      margin-bottom: 20px;
+    }
+
+    p {
+      margin-bottom: 20px;
+    }
+
+    input {
+      padding: 10px;
+      width: 90%;
+      margin: 10px 0;
+      border-radius: 5px;
+      border: 1px solid #00ffea;
+      background: rgba(0, 0, 0, 0.6);
+      color: #fff;
+      outline: none;
+    }
+
+    button {
+      padding: 10px 20px;
+      background: #00ffea;
+      color: #000;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: 0.3s;
+    }
+
+    button:hover {
+      background: #00b8a9;
+      box-shadow: 0 0 10px #00ffea;
+    }
+
+    #result {
+      margin-top: 20px;
+    }
+
+    img {
+      margin-top: 20px;
+      max-width: 100%;
+      border: 2px solid #00ffea;
+      border-radius: 10px;
+      box-shadow: 0 0 20px #000;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>🔄 Face Swap App</h1>
+    <p>Enter two image URLs to swap faces:</p>
+    
+    <input type="text" id="imageUrl" placeholder="Source Image URL">
+    <br>
+    <input type="text" id="targetUrl" placeholder="Target Image URL">
+    <br>
+    <button onclick="swapFaces()">Swap Faces</button>
+    
+    <div id="result"></div>
+  </div>
+
+  <script>
+    function swapFaces() {
+      const img1 = document.getElementById('imageUrl').value;
+      const img2 = document.getElementById('targetUrl').value;
+      
+      if (!img1 || !img2) {
+        alert("Please enter both image URLs!");
+        return;
+      }
+      
+      const apiUrl = `https://bj-devs.serv00.net/v1/faceswap.php?imageurl=${encodeURIComponent(img1)}&targetimg=${encodeURIComponent(img2)}`;
+      
+      document.getElementById('result').innerHTML = `
+        <p>Processing... Please wait ⏳</p>
+        <img src="${apiUrl}" alt="Swapped Result">
+      `;
+    }
+  </script>
+</body>
+</html>
